@@ -1,18 +1,15 @@
 "use client";
 
-import { SessionProvider } from "next-auth/react";
-import { NhostClient } from '@nhost/nhost-js'
+// import { SessionProvider } from "next-auth/react";
+import { NhostClient } from "@nhost/nextjs";
 import { NhostProvider } from "@nhost/nextjs";
-import { useRouter } from "next/router";
+import { nhost } from "@/lib/nhost";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
-
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const nhost = new NhostClient({
-    authUrl: "https://your-nhost-project-url", // Replace with your Nhost backend URL
-  });
+  
 
   useEffect(() => {
     // Redirect to login if not authenticated (optional)
@@ -22,8 +19,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   return (
-    <SessionProvider>
+    // <SessionProvider>
       <NhostProvider nhost={nhost}>{children}</NhostProvider>
-    </SessionProvider>
+    // </SessionProvider>
   );
 }

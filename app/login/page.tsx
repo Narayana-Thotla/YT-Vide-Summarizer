@@ -1,28 +1,35 @@
-"use client"
+"use client";
 
-import { signIn } from "next-auth/react"
-import { Github, Chrome, YoutubeIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { useSession } from "next-auth/react"
-import { redirect } from "next/navigation"
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { nhostProviders } from "@/lib/nhost"
-import { useAuthenticationStatus } from '@nhost/nextjs'
-import { useSignInWithProvider } from '@nhost/nextjs'
+import { signIn } from "next-auth/react";
+import { Github, Chrome, YoutubeIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { nhost } from "@/lib/nhost";
+import { useAuthenticationStatus } from "@nhost/nextjs";
 
 export default function LoginPage() {
-  const { data: session } = useSession()
-  const { isAuthenticated, isLoading, error, isError } = useAuthenticationStatus()
+  // const { data: session } = useSession();
+  const { isAuthenticated, isLoading, error, isError } =
+    useAuthenticationStatus();
 
   // if (session) {
   //   redirect("/")
   // }
 
+useEffect(() => {
   if (isAuthenticated) {
-      redirect("/")
-    }
+    redirect("/dashboard");
+  }
+}, [isAuthenticated])
+
+
+ 
+
+  console.log('authentication of nhost:',isAuthenticated,nhost.auth)
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-accent">
@@ -41,7 +48,12 @@ export default function LoginPage() {
           <Button
             variant="outline"
             className="w-full py-6 space-x-4 relative hover:bg-accent"
-            onClick={() => signIn("google", { callbackUrl: "/" })}
+            // onClick={() => signIn("google", { callbackUrl: "/" })}
+            onClick={() =>
+              nhost.auth.signIn({
+                provider: "google",
+              })
+            }
           >
             <Chrome className="w-5 h-5 absolute left-4" />
             <span>Continue with Google</span>
@@ -51,7 +63,11 @@ export default function LoginPage() {
             variant="outline"
             className="w-full py-6 space-x-4 relative hover:bg-accent"
             // onClick={() => signIn("github", { callbackUrl: "/" })}
-            onClick={() =>  signInWithProvider('github');}
+            onClick={() =>
+              nhost.auth.signIn({
+                provider: "github",
+              })
+            }
           >
             <Github className="w-5 h-5 absolute left-4" />
             <span>Continue with GitHub</span>
@@ -70,5 +86,5 @@ export default function LoginPage() {
         </div>
       </Card>
     </main>
-  )
+  );
 }
