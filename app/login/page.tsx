@@ -7,12 +7,13 @@ import { Card } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { nhost } from "@/lib/nhost";
 import { useAuthenticationStatus } from "@nhost/nextjs";
 
 export default function LoginPage() {
   // const { data: session } = useSession();
+  const router = useRouter()
   const { isAuthenticated, isLoading, error, isError } =
     useAuthenticationStatus();
 
@@ -20,16 +21,59 @@ export default function LoginPage() {
   //   redirect("/")
   // }
 
-useEffect(() => {
-  if (isAuthenticated) {
-    redirect("/dashboard");
-  }
-}, [isAuthenticated])
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     redirect("/dashboard");
+  //   }
+  // }, [isAuthenticated]);
 
 
- 
+  useEffect(() => {
+    const handleAuthChange = async () => {
+      if (isAuthenticated) {
+        // Fetch the user details
+        const user = await nhost.auth.getUser() || null;
 
-  console.log('authentication of nhost:',isAuthenticated,nhost.auth)
+        console.log("Logged in user:", user);
+
+        if (!user) {
+          console.error("No user found");
+          return;
+        }
+  
+        console.log("Logged in user:", user);
+
+        // Example: Send user details to your backend API
+        try {
+         const reqToBackend = await fetch('api/save-user',
+          {
+            method:'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: user.id ,
+            email: user.email,
+            // displayName: user.display_name || user.metadata.name,
+            // avatarUrl: user.avatar_url,
+            })
+          }
+         )
+        } catch (error) {
+          console.error("Error saving user:", error);
+        }
+
+        // Redirect after storing user data
+        // redirect("/dashboard");
+        router.push('/dashboard')
+      }
+    };
+
+    handleAuthChange();
+  }, [isAuthenticated]);
+
+  console.log("authentication of nhost:", isAuthenticated, nhost.auth);
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-accent">

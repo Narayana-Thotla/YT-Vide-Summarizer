@@ -7,32 +7,76 @@ import { signOut } from "next-auth/react";
 import { nhost } from "@/lib/nhost";
 import { useAuthenticationStatus } from "@nhost/nextjs";
 import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useStore } from "@/zustand/zustandStore";
 
 interface HistoryItem {
   id: string;
   url: string;
   title: string;
-  summary: string;
-  date: string;
+  response: string;
+  email: string;
 }
 
 export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [history] = useState<HistoryItem[]>([]);
+  const [history, sethistory] = useState<HistoryItem[]>([]);
+  const [email, setemail] = useState("");
   const [mounted, setMounted] = useState(false);
   const { isAuthenticated, isLoading, error, isError } =
     useAuthenticationStatus();
+
+  const storeUrl = useStore((state: any) => state.url);
+  const updateUrl = useStore((state: any) => state.updateUrl);
+  const updateTitle = useStore((state: any) => state.updateTitle);
+  const updateResponse = useStore((state: any) => state.updateResponse);
+
+  const router = useRouter();
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     // redirect("/login");
+  //     redirect("/");
+  //   }
+  // }, [isAuthenticated]);
+
+  // if (!mounted) {
+  //   return null;
+  // }
 
   useEffect(() => {
     if (!isAuthenticated) {
       // redirect("/login");
       redirect("/");
     }
+
+    const getUserDetails = async () => {
+      if (isAuthenticated) {
+        // Fetch the user details
+        const user = await nhost.auth.getUser();
+
+        console.log("Logged in user:", user);
+
+        if (!user) {
+          console.error("No user found");
+          return;
+        }
+
+        setemail(user.email ?? "");
+
+        const request = await fetch(`api/get-user-data/${user.email}`);
+        const dataOfUser = await request.json();
+
+        console.log("dataof uses of history:", dataOfUser);
+
+        sethistory(dataOfUser.userHistoryData);
+      }
+    };
+
+    getUserDetails();
   }, [isAuthenticated]);
 
-  // if (!mounted) {
-  //   return null;
-  // }
+  console.log("history of users set using usestate:", history);
+  // console.log("storeurl value:", storeUrl);
 
   return (
     <div className="relative">
@@ -56,7 +100,7 @@ export function Sidebar() {
             <History className="h-5 w-5" />
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-4 h-[75vh] overflow-auto ">
             {history.length === 0 ? (
               <p className="text-muted-foreground text-sm">No history yet</p>
             ) : (
@@ -64,10 +108,16 @@ export function Sidebar() {
                 <div
                   key={item.id}
                   className="p-4 rounded-lg border hover:bg-accent cursor-pointer"
+                  onClick={() => {
+                    updateUrl(item.url);
+                    updateTitle(item.title);
+                    updateResponse(item.response);
+                    // router.push("/dashboard");
+                  }}
                 >
                   <h3 className="font-medium truncate">{item.title}</h3>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {new Date(item.date).toLocaleDateString()}
+                    {/* {new Date(item.date).toLocaleDateString()} */}
                   </p>
                 </div>
               ))
