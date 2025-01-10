@@ -46,8 +46,8 @@ export default function Home() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      // redirect("/login");
-      redirect("/");
+      redirect("/login");
+      // redirect("/");
     }
 
     const getUserDetails = async () => {
