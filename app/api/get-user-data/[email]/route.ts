@@ -35,7 +35,8 @@ export async function GET(
     // const data = await result.json()
     // console.log('data of yt of user:',data);
 
-    const result = await fetch(`https://lesfhoucwjhkulqdwned.hasura.ap-south-1.nhost.run/v1/graphql`, {
+    // const result = await fetch(`https://lesfhoucwjhkulqdwned.hasura.ap-south-1.nhost.run/v1/graphql`, {
+    const result = await fetch(process.env.HASURA_ENDPOINT || '', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

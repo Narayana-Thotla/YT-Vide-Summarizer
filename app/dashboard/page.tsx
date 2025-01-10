@@ -93,9 +93,10 @@ export default function Home() {
 
     saveDataToBackendHasura();
 
+    const N8N_SUBSPACE_URL= process.env.NEXT_PUBLIC_N8N_SUBSPACE_URL || ''
 
     const res = await fetch(
-      "https://n8n-dev.subspace.money/webhook-test/4e71b2fe-5b16-4f33-9435-0291655b8be6",
+      N8N_SUBSPACE_URL,
       {
         method: "POST", // Specify the HTTP method
         headers: {
