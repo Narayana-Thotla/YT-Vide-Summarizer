@@ -7,7 +7,7 @@ import { signOut } from "next-auth/react";
 import { nhost } from "@/lib/nhost";
 import { useAuthenticationStatus } from "@nhost/nextjs";
 import { redirect } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useStore } from "@/zustand/zustandStore";
 
 interface HistoryItem {

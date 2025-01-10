@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { nhost } from "@/lib/nhost";
 import { useAuthenticationStatus } from "@nhost/nextjs";
 
