@@ -51,7 +51,8 @@ export default function Home() {
     if (!isAuthenticated) {
       // redirect("/login");
       // redirect("/");
-      router.push('/login')
+      // router.push('/login')
+      router.push('/')
     }
 
     const getUserDetails = async () => {

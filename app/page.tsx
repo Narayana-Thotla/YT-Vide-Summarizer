@@ -25,7 +25,7 @@ export default function LoginPage() {
     if (isAuthenticated) {
 
       // redirect("/dashboard");
-       router.push('dashboard')
+       router.push('/dashboard')
     }
   }, [isAuthenticated])
 

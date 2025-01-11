@@ -14,8 +14,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Redirect to login if not authenticated (optional)
     if (!nhost.auth.isAuthenticated()) {
-      router.push("/login");
+      // router.push("/login");
+      router.push("/");
     }
+    router.push("/dashboard");
   }, [router]);
 
   return (
