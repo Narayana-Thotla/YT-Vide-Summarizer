@@ -48,11 +48,11 @@ export default function Home() {
     useAuthenticationStatus();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (isAuthenticated  == false) {
       // redirect("/login");
       // redirect("/");
-      // router.push('/login')
-      router.push('/')
+      router.push('/login')
+      // router.push('/')
     }
 
     const getUserDetails = async () => {
