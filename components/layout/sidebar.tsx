@@ -125,7 +125,7 @@ export function Sidebar({ isAuthenticated, userEmail, nhost }: any) {
           </div>
 
           <div className="space-y-4 h-[75vh] overflow-auto ">
-            {history.length === 0 || history == undefined ? (
+            {!history || history?.length === 0 ? (
               <p className="text-muted-foreground text-sm">No history yet</p>
             ) : (
               history.map((item) => (

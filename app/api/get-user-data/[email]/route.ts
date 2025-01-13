@@ -59,6 +59,7 @@ export async function GET(
     });
 
     const data = await result.json()
+    console.log('data of yt of user only data.data:',data.data);
     console.log('data of yt of user:',data.data.YT_Video_Data);
     
 
