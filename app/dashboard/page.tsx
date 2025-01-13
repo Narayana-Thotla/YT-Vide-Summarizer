@@ -14,12 +14,20 @@ import { useAuthenticationStatus } from "@nhost/nextjs";
 import { nhost } from "@/lib/nhost";
 import { useStore } from "@/zustand/zustandStore";
 
+interface HistoryItem {
+  id: string;
+  url: string;
+  title: string;
+  response: string;
+  email: string;
+}
+
 export default function Home() {
   const [url, setUrl] = useState("");
   const [email, setemail] = useState("");
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState("");
-  const [historyData, sethistoryData] = useState([]);
+    const [history, sethistory] = useState<HistoryItem[]>([]);
   const [N8NResponse, setN8NResponse] = useState({
     title: "",
     description: "",
@@ -73,6 +81,7 @@ export default function Home() {
         const dataOfUser = await request.json();
 
         console.log("dataof uses of history:", dataOfUser);
+        sethistory(dataOfUser.userHistoryData);
       }
     };
 

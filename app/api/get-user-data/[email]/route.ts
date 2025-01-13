@@ -20,6 +20,16 @@ export async function GET(
   }`
   
 
+  const query1=`query YT_Video_Data {
+  YT_Video_Data {
+    email
+    id
+    response
+    title
+    url
+  }
+}`
+
 
   
 
@@ -44,7 +54,7 @@ export async function GET(
       },
        body: JSON.stringify({
         query: query,
-        variables: { '_eq':email },
+        variables: { '_eq':`${email}` },
       }),
     });
 
