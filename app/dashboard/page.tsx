@@ -160,6 +160,7 @@ export default function Home() {
     }
   };
 
+  // console.log("isAuthenticated in dashboard:", isAuthenticated,nhost.auth.getUser());
   // if (status === "loading") {
   if (isLoading) {
     return (
@@ -171,7 +172,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-accent">
-      <Sidebar />
+      <Sidebar  isAuthenticated={isAuthenticated} userEmail={nhost.auth.getUser()?.email} nhost={nhost} />
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col items-center mb-8 pt-16">

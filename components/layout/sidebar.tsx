@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { Menu, X, History, LogOut } from "lucide-react";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react";
-import { nhost } from "@/lib/nhost";
-import { useAuthenticationStatus } from "@nhost/nextjs";
+// import { nhost } from "@/lib/nhost";
+// import { useAuthenticationStatus } from "@nhost/nextjs";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/zustand/zustandStore";
@@ -18,13 +18,13 @@ interface HistoryItem {
   email: string;
 }
 
-export function Sidebar() {
+export function Sidebar({ isAuthenticated, userEmail, nhost }: any) {
   const [isOpen, setIsOpen] = useState(false);
   const [history, sethistory] = useState<HistoryItem[]>([]);
   const [email, setemail] = useState("");
   const [mounted, setMounted] = useState(false);
-  const { isAuthenticated, isLoading, error, isError } =
-    useAuthenticationStatus();
+  // const { isAuthenticated, isLoading, error, isError } =
+  //   useAuthenticationStatus();
 
   const storeUrl = useStore((state: any) => state.url);
   const updateUrl = useStore((state: any) => state.updateUrl);
@@ -43,41 +43,65 @@ export function Sidebar() {
   //   return null;
   // }
 
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  // redirect("/login");
+  //   redirect("/");
+  // }
+
+  console.log("Sidebar isAuthenticated:", isAuthenticated);
+  //   const getUserDetails = async () => {
+  //     if (isAuthenticated) {
+  //       // Fetch the user details
+  //       const user = await nhost.auth.getUser();
+
+  //       console.log("Logged in user:", user);
+
+  //       if (!user) {
+  //         console.error("No user found");
+  //         return;
+  //       }
+
+  //       setemail(user.email ?? "");
+
+  //       const request = await fetch(`api/get-user-data/${user.email}`);
+  //       const dataOfUser = await request.json();
+
+  //       console.log("dataof uses of history:", dataOfUser);
+
+  //       sethistory(dataOfUser.userHistoryData);
+  //     }
+  //   };
+
+  //   getUserDetails();
+  // }, [isAuthenticated]);
+
   useEffect(() => {
-    if (!isAuthenticated) {
-      // redirect("/login");
-      redirect("/");
-    }
-
     const getUserDetails = async () => {
-      if (isAuthenticated) {
-        // Fetch the user details
-        const user = await nhost.auth.getUser();
+      if (!userEmail) {
+        console.error("No user found");
+        return;
+      }
 
-        console.log("Logged in user:", user);
-
-        if (!user) {
-          console.error("No user found");
-          return;
-        }
-
-        setemail(user.email ?? "");
-
-        const request = await fetch(`api/get-user-data/${user.email}`);
+      if (userEmail) {
+        setemail(userEmail);
+        console.log("userEmail in sidebar:", userEmail);
+        const request = await fetch(`api/get-user-data/${userEmail}`);
         const dataOfUser = await request.json();
 
         console.log("dataof uses of history:", dataOfUser);
+        console.log(" request dataof uses of history:", request);
 
         sethistory(dataOfUser.userHistoryData);
       }
     };
-
     getUserDetails();
-  }, [isAuthenticated]);
+  }, [userEmail, isAuthenticated]);
 
   console.log("history of users set using usestate:", history);
   // console.log("storeurl value:", storeUrl);
 
+  console.log("userEmail in sidebar:", userEmail);
   return (
     <div className="relative">
       <Button
